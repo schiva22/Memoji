@@ -61,10 +61,24 @@ h1 {
 }
 
 
-.open-card .game__card__front_side {
+.opened .game__card__front_side {
     transform: rotateY(360deg);
 }
 
-.open-card .game__card__shirt {
+.opened .game__card__shirt {
     transform: rotateY(180deg);
+}
+
+.green .game__card__front_side {
+    background-color: #5AD66F;
+    border-color: #5AD66F;
+}
+
+.red .game__card__front_side {
+    background-color: #F44336;
+    border-color: #F44336;
+}
+
+.selected, .blocked {
+    pointer-events: none;
 }

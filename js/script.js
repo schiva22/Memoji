@@ -1,35 +1,14 @@
-let cards = document.querySelectorAll('.game__card');
-const animals = [128053, 128054, 128049, 128055, 128057, 128059, 128053, 128054, 128049, 128055, 128057, 128059];
-
-// Открываем карточки по клику
-cards.forEach((el) => clickCards(el));
-
-function clickCards(el) {
-    el.addEventListener('click', function () {
-    this.classList.toggle('open-card');
-        return;
-    })
-}
-
-// перемешивание карточек
-function shuffle (arr) {
+// сортировка массива
+function shuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
-        el = arr[i];
         [arr[i], arr[j]] = [arr[j], arr[i]]; 
     }
-//    console.log(arr);
 }
 
-// удаление потомка
-function removeBlock(arr) {
-    for (let el = arr.length - 1; el >= 0; el--) {
-            arr[el].remove();
-    }
-}
+function addCard(arr) {
+    const gameElement = document.getElementById('game');
 
-// добавление карточки в game
-function addBlock (arr) {
     for (let el = 0; el < arr.length; el++) {
         let div = document.createElement('div')
         div.className = 'game__card';
@@ -38,16 +17,59 @@ function addBlock (arr) {
             '<div class="game__card__shirt"></div>\
             <div class="game__card__front_side">&#' + arr[el] + ';</div>'
 
-        document.getElementById('game').appendChild(div);
+        gameElement.appendChild(div);
     }
 }
 
-function mixingCards () {
-    shuffle(animals);
-    removeBlock(cards);
-    addBlock(animals);
-    cards = document.querySelectorAll('.game__card');
-    cards.forEach((el) => clickCards(el));
+function removeCard(arr) {
+    for (let el = arr.length - 1; el >= 0; el--) {
+            arr[el].remove();
+    }
 }
 
-mixingCards();
+function closeCard() {
+    const cards = document.querySelectorAll('.opened');
+    cards.forEach((el) => {
+        el.classList.toggle('selected');
+        el.classList.toggle('opened');
+    })
+}
+
+let animals = [128053, 128054, 128049, 128055, 128057, 128059, 128053, 128054, 128049, 128055, 128057, 128059];
+
+
+shuffle(animals);
+addCard(animals);
+const cards = document.querySelectorAll('.game__card');
+
+cards.forEach((el) => el.addEventListener('click', function () {
+    el.classList.toggle('opened');
+    el.classList.toggle('selected');
+
+    let openCards = document.querySelectorAll('.selected');
+    let redCards = document.querySelectorAll('.red');
+
+    if (openCards.length === 2) {
+        console.log('len = 2');
+        if (openCards[0].innerText === openCards[1].innerText) {
+            console.log('совпадение');
+            openCards.forEach((el) => {
+                el.classList.add('blocked');
+                el.classList.add('green');
+                el.classList.remove('selected');
+            })
+        } else {
+            console.log('несовпадение');
+            setTimeout(1000, openCards.forEach((el) => {
+                el.classList.add('red');
+            }))
+        }
+    } else {
+        redCards.forEach((el) => {
+            console.log('Чистим классы')
+            el.classList.remove('red');
+            el.classList.remove('selected');
+            el.classList.remove('opened');
+        })
+    }
+}));

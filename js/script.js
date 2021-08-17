@@ -10,12 +10,12 @@ function addCard(arr) {
     const gameElement = document.getElementById('game');
 
     for (let el = 0; el < arr.length; el++) {
-        let div = document.createElement('div')
+        let div = document.createElement('div');
         div.className = 'game__card';
 
         div.innerHTML = 
             '<div class="game__card__shirt"></div>\
-            <div class="game__card__front_side">&#' + arr[el] + ';</div>'
+            <div class="game__card__front_side">&#' + arr[el] + ';</div>';
 
         gameElement.appendChild(div);
     }
@@ -37,9 +37,11 @@ function closeCard() {
 
 let animals = [128053, 128054, 128049, 128055, 128057, 128059, 128053, 128054, 128049, 128055, 128057, 128059];
 
-
 shuffle(animals);
 addCard(animals);
+
+let isfirstCard = false;
+let greenCard = 0;
 const cards = document.querySelectorAll('.game__card');
 
 cards.forEach((el) => el.addEventListener('click', function () {
@@ -48,28 +50,43 @@ cards.forEach((el) => el.addEventListener('click', function () {
 
     let openCards = document.querySelectorAll('.selected');
     let redCards = document.querySelectorAll('.red');
-
+    
     if (openCards.length === 2) {
-        console.log('len = 2');
         if (openCards[0].innerText === openCards[1].innerText) {
-            console.log('совпадение');
             openCards.forEach((el) => {
                 el.classList.add('blocked');
                 el.classList.add('green');
                 el.classList.remove('selected');
+                greenCard++;
             })
         } else {
-            console.log('несовпадение');
             setTimeout(1000, openCards.forEach((el) => {
                 el.classList.add('red');
             }))
         }
     } else {
         redCards.forEach((el) => {
-            console.log('Чистим классы')
             el.classList.remove('red');
             el.classList.remove('selected');
             el.classList.remove('opened');
         })
+    }
+// таймер
+    if (!isfirstCard) {
+        isfirstCard = true;
+        let timeSecond = 60;
+        let timer = setInterval(function () {
+            let second = timeSecond % 60;
+            if (second < 10) {
+                second = `0${second}`;
+            }
+
+            if (timeSecond < 0 || greenCard === cards.length) {     //отключаем таймер
+                clearInterval(timer);
+            } else {
+                document.getElementById('timer').innerHTML = `0${Math.trunc(timeSecond / 60 % 60)}:${second}`;
+            }
+            timeSecond--;
+        }, 1000)
     }
 }));

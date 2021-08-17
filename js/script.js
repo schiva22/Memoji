@@ -6,8 +6,9 @@ function shuffle(arr) {
     }
 }
 
-function addCard(arr) {
+function renderCards(arr) {
     const gameElement = document.getElementById('game');
+    gameElement.innerHTML = '';
 
     for (let el = 0; el < arr.length; el++) {
         let div = document.createElement('div');
@@ -21,27 +22,13 @@ function addCard(arr) {
     }
 }
 
-function removeCard(arr) {
-    for (let el = arr.length - 1; el >= 0; el--) {
-            arr[el].remove();
-    }
-}
-
-function closeCard() {
-    const cards = document.querySelectorAll('.opened');
-    cards.forEach((el) => {
-        el.classList.toggle('selected');
-        el.classList.toggle('opened');
-    })
-}
-
-function plaingGame() {
+function game() {
     shuffle(animals);
-    addCard(animals);
+    renderCards(animals);
 
     const cards = document.querySelectorAll('.game__card');
-    let isfirstCard = false;
-    let greenCard = 0;
+    let isFirstCard = false;
+    let greenCards = 0;
 
     cards.forEach((el) => el.addEventListener('click', function () {
         el.classList.toggle('opened');
@@ -56,12 +43,10 @@ function plaingGame() {
                     el.classList.add('blocked');
                     el.classList.add('green');
                     el.classList.remove('selected');
-                    greenCard++;
+                    greenCards++;
                 })
             } else {
-                setTimeout(1000, openCards.forEach((el) => {
-                    el.classList.add('red');
-                }))
+                setTimeout(1000, openCards.forEach((el) => el.classList.add('red')));
             }
         } else {
             redCards.forEach((el) => {
@@ -71,8 +56,8 @@ function plaingGame() {
             })
         }
     // таймер
-        if (!isfirstCard) {
-            isfirstCard = true;
+        if (!isFirstCard) {
+            isFirstCard = true;
             let timeSecond = 60;
             let timer = setInterval(function () {
                 let second = timeSecond % 60;
@@ -80,7 +65,7 @@ function plaingGame() {
                     second = `0${second}`;
                 }
 
-                if (timeSecond < 0 || greenCard === cards.length) {     //отключаем таймер
+                if (timeSecond < 0 || greenCards === cards.length) {     //отключаем таймер
                     clearInterval(timer);
                     modal_window.style.opacity = 1;
                     modal_window.style.visibility = 'visible';
@@ -102,16 +87,14 @@ function plaingGame() {
 }
 
 let animals = [128053, 128054, 128049, 128055, 128057, 128059, 128053, 128054, 128049, 128055, 128057, 128059];
-plaingGame();
+game();
 
 const modal_window = document.querySelector('.modal');
 let btn_modal = document.querySelector('.button_window');
 const content_model = document.querySelector('.text_window');
 
 btn_modal.addEventListener('click', function () {
-    let clear = document.querySelectorAll('.game__card')
-    removeCard(clear);
     modal_window.style.opacity = 0;
     modal_window.style.visibility = 'hidden';
-    plaingGame();
+    game();
 })
